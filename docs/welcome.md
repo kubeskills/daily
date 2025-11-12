@@ -3,9 +3,9 @@ layout: default
 title: "You're in – KubeSkills Daily"
 ---
 
-# You’re in for KubeSkills Daily
+# Subscription Confirmed!
 
-Thanks for subscribing.
+Boom! You're officially confirmed and on the list.
 
 You will receive your first Kubernetes test soon.
 
