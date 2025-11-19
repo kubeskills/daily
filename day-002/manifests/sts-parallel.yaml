@@ -5,7 +5,7 @@ metadata:
 spec:
   serviceName: "nginx"
   replicas: 3
-  podManagementPolicy: Parallel  # Changed from OrderedReady
+  podManagementPolicy: Parallel
   selector:
     matchLabels:
       app: nginx
