@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: with-toleration
+spec:
+  tolerations:
+  - key: "dedicated"
+    operator: "Equal"
+    value: "gpu"
+    effect: "NoExecute"
+  containers:
+  - name: nginx
+    image: nginx
+  nodeSelector:
+    kubernetes.io/hostname: $NODE

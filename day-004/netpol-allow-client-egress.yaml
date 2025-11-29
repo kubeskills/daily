@@ -1,0 +1,24 @@
+kind: NetworkPolicy
+metadata:
+  name: allow-client-egress
+spec:
+  podSelector:
+    matchLabels:
+      run: client
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: web
+    ports:
+    - protocol: TCP
+      port: 80
+  - to:  # Don't forget DNS!
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+    ports:
+    - protocol: UDP
+      port: 53
