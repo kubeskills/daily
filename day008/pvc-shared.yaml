@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shared-pvc
+spec:
+  accessModes:
+    - ReadWriteMany  # Not supported by all provisioners!
+  storageClassName: super-fast-nvme
+  resources:
+    requests:
+      storage: 1Gi

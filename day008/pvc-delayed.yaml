@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: delayed-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: delayed-binding
+  resources:
+    requests:
+      storage: 1Gi

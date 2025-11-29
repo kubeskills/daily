@@ -1,0 +1,7 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: super-fast-nvme
+provisioner: $DEFAULT_PROVISIONER
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
