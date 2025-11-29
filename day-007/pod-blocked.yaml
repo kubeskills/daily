@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: blocked-pod
+spec:
+  initContainers:
+  - name: wait-for-db
+    image: busybox
+    command: ['sh', '-c', 'until nslookup nonexistent-db; do echo waiting; sleep 2; done']
+  containers:
+  - name: app
+    image: nginx
+    ports:
+    - containerPort: 80

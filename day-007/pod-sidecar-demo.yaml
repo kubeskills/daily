@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sidecar-demo
+spec:
+  initContainers:
+  - name: sidecar-logger
+    image: busybox
+    restartPolicy: Always  # Key difference - marks it as sidecar
+    command: ['sh', '-c', 'while true; do echo "$(date) - Sidecar running"; sleep 5; done']
+  containers:
+  - name: app
+    image: nginx
