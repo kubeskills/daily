@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  APP_MODE: "maintenance"
+  LOG_LEVEL: "error"
+  config.json: |
+    {
+      "feature_flag": false,
+      "max_connections": 10
+    }

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  APP_MODE: "debug"           # Changed!
+  LOG_LEVEL: "verbose"        # Changed!
+  config.json: |
+    {
+      "feature_flag": true,
+      "max_connections": 500
+    }

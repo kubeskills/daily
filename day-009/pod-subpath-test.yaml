@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: subpath-test
+spec:
+  containers:
+  - name: app
+    image: busybox
+    command: ['sh', '-c', 'while true; do echo "--- SUBPATH FILE ---"; cat /app/config.json; sleep 10; done']
+    volumeMounts:
+    - name: config-volume
+      mountPath: /app/config.json
+      subPath: config.json  # This breaks auto-updates!
+  volumes:
+  - name: config-volume
+    configMap:
+      name: app-config
