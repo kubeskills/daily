@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: slow-startup
+spec:
+  containers:
+  - name: app
+    image: hashicorp/http-echo
+    args:
+    - "-text=Finally started"
+    - "-listen=:8080"
+    lifecycle:
+      postStart:
+        exec:
+          command: ["/bin/sh", "-c", "sleep 60"]  # Simulate slow startup
+    startupProbe:
+      httpGet:
+        path: /
+        port: 8080
+      periodSeconds: 5
+      failureThreshold: 30  # 30 * 5s = 150s max startup time
+    livenessProbe:
+      httpGet:
+        path: /
+        port: 8080
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3

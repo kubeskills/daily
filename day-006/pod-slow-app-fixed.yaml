@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: slow-app-fixed
+spec:
+  containers:
+  - name: app
+    image: hashicorp/http-echo
+    args:
+    - "-text=Healthy now!"
+    - "-listen=:8080"
+    ports:
+    - containerPort: 8080
+    lifecycle:
+      postStart:
+        exec:
+          command: ["/bin/sh", "-c", "sleep 10"]
+    livenessProbe:
+      httpGet:
+        path: /
+        port: 8080
+      initialDelaySeconds: 15    # Wait for startup
+      periodSeconds: 10          # Check every 10s
+      timeoutSeconds: 5          # Generous timeout
+      failureThreshold: 3        # Allow 3 failures
