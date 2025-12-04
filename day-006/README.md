@@ -41,17 +41,10 @@ metadata:
 spec:
   containers:
   - name: app
-    image: hashicorp/http-echo
-    args:
-    - "-text=Slow response"
-    - "-listen=:8080"
+    image: busybox:1.36.1
+    command: ["/bin/sh", "-c", "sleep 10 && mkdir -p /www && echo 'Slow response' > /www/index.html && httpd -f -p 8080 -h /www"]
     ports:
     - containerPort: 8080
-    # Simulate slow startup
-    lifecycle:
-      postStart:
-        exec:
-          command: ["/bin/sh", "-c", "sleep 10"]
     livenessProbe:
       httpGet:
         path: /
@@ -104,16 +97,10 @@ metadata:
 spec:
   containers:
   - name: app
-    image: hashicorp/http-echo
-    args:
-    - "-text=Healthy now!"
-    - "-listen=:8080"
+    image: busybox:1.36.1
+    command: ["/bin/sh", "-c", "sleep 10 && mkdir -p /www && echo 'Healthy now!' > /www/index.html && httpd -f -p 8080 -h /www"]
     ports:
     - containerPort: 8080
-    lifecycle:
-      postStart:
-        exec:
-          command: ["/bin/sh", "-c", "sleep 10"]
     livenessProbe:
       httpGet:
         path: /
@@ -202,14 +189,8 @@ metadata:
 spec:
   containers:
   - name: app
-    image: hashicorp/http-echo
-    args:
-    - "-text=Finally started"
-    - "-listen=:8080"
-    lifecycle:
-      postStart:
-        exec:
-          command: ["/bin/sh", "-c", "sleep 60"]  # Simulate slow startup
+    image: busybox:1.36.1
+    command: ["/bin/sh", "-c", "sleep 60 && mkdir -p /www && echo 'Finally started' > /www/index.html && httpd -f -p 8080 -h /www"]  # Simulate slow startup
     startupProbe:
       httpGet:
         path: /
@@ -288,4 +269,4 @@ kubectl delete service web-svc
 
 ---
 
-Next: Day 7 - Init Container Failures
+[Next: Day 7 - Init Container Failures](../day-007/README.md)
