@@ -113,7 +113,7 @@ Lesson: Overlays make environment management trivial.
 ## 📬 Subscribe
 
 Get new experiments delivered daily:
-👉 Join the newsletter￼
+👉 [Join the newsletter](https://daily.kubeskills.com)
 
 Or follow along on Twitter/X: @KubeSkills
 
