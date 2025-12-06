@@ -94,10 +94,10 @@ kubectl get all -A
 
 Day 5 – Multi-Env Testing with Kustomize
 
-Goal: Patch different deployment variants.
-Command: kubectl apply -k kustomization-examples/env1
-Observation: env1-my-app deployed with its own labels.
-Lesson: Overlays make environment management trivial.
+Goal: Patch different deployment variants.  
+Command: kubectl apply -k kustomization-examples/env1.  
+Observation: env1-my-app deployed with its own labels.  
+Lesson: Overlays make environment management trivial.  
 
 
 ---
