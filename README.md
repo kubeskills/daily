@@ -1,8 +1,5 @@
 https://daily.kubeskills.com
 
-# daily
-KubeSkills Daily: A 5-minute Kubernetes test in your inbox every morning
-
 # 🧠 One K8s a Day
 
 **Learn Kubernetes by testing one idea every day.**  
