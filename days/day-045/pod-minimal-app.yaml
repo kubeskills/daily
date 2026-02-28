@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: minimal-app
+spec:
+  containers:
+  - name: app
+    image: gcr.io/distroless/static-debian11
+    command: ['sleep', '3600']

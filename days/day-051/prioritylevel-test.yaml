@@ -1,0 +1,34 @@
+apiVersion: flowcontrol.apiserver.k8s.io/v1beta3
+kind: PriorityLevelConfiguration
+metadata:
+  name: test-priority
+spec:
+  type: Limited
+  limited:
+    nominalConcurrencyShares: 10
+    limitResponse:
+      type: Queue
+      queuing:
+        queues: 16
+        queueLengthLimit: 50
+        handSize: 4
+---
+apiVersion: flowcontrol.apiserver.k8s.io/v1beta3
+kind: FlowSchema
+metadata:
+  name: test-flow
+spec:
+  distinguisherMethod:
+    type: ByUser
+  matchingPrecedence: 1000
+  priorityLevelConfiguration:
+    name: test-priority
+  rules:
+  - resourceRules:
+    - apiGroups: [""]
+      resources: ["pods"]
+      verbs: ["list", "get"]
+    subjects:
+    - kind: User
+      user:
+        name: test-user

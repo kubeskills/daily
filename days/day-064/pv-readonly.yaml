@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: readonly-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+  - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Delete
+  hostPath:
+    path: /tmp/readonly
+---
+# PVC with ReadWriteOnce won't bind to ReadOnlyMany PV
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mismatch-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ""

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-agent
+  namespace: baseline-ns
+spec:
+  selector:
+    matchLabels:
+      app: node-agent
+  template:
+    metadata:
+      labels:
+        app: node-agent
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: agent
+        image: busybox:1.36
+        command: ['sh', '-c', 'while true; do echo "node agent running"; sleep 60; done']
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_ADMIN
+        resources:
+          requests:
+            cpu: "50m"
+            memory: 64Mi
+          limits:
+            cpu: "100m"
+            memory: 128Mi

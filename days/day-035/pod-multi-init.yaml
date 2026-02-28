@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-init-pod
+spec:
+  initContainers:
+  - name: init-db
+    image: busybox
+    command: ['sh', '-c', 'echo initializing database; sleep 5']
+  - name: init-cache
+    image: busybox
+    command: ['sh', '-c', 'echo warming cache; sleep 3']
+  containers:
+  - name: app
+    image: nginx

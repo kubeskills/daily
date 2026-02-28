@@ -1,0 +1,41 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: demo-webhook-fail
+webhooks:
+- name: validate.fail.example.com
+  admissionReviewVersions: ["v1", "v1beta1"]
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: default
+      path: /validate
+  rules:
+  - apiGroups: [""]
+    apiVersions: ["v1"]
+    operations: ["CREATE"]
+    resources: ["pods"]
+  failurePolicy: Fail
+  timeoutSeconds: 5
+  sideEffects: None
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: demo-webhook-ignore
+webhooks:
+- name: validate.ignore.example.com
+  admissionReviewVersions: ["v1", "v1beta1"]
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: default
+      path: /validate
+  rules:
+  - apiGroups: [""]
+    apiVersions: ["v1"]
+    operations: ["CREATE"]
+    resources: ["pods"]
+  failurePolicy: Ignore
+  timeoutSeconds: 30
+  sideEffects: None

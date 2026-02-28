@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-monitor
+spec:
+  selector:
+    matchLabels:
+      app: node-monitor
+  template:
+    metadata:
+      labels:
+        app: node-monitor
+    spec:
+      tolerations:
+      # Tolerate control-plane nodes
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      # Tolerate any NoSchedule taint
+      - operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: agent
+        image: busybox:1.36
+        command: ['sh', '-c', 'while true; do echo "Monitoring node $(hostname)"; sleep 60; done']
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+          limits:
+            cpu: "100m"
+            memory: "128Mi"
+---
+# DaemonSet that skips control-plane (no toleration)
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: worker-only-agent
+spec:
+  selector:
+    matchLabels:
+      app: worker-agent
+  template:
+    metadata:
+      labels:
+        app: worker-agent
+    spec:
+      # No tolerations - will NOT run on tainted control-plane nodes
+      nodeSelector:
+        node-role.kubernetes.io/worker: ""
+      containers:
+      - name: agent
+        image: busybox:1.36
+        command: ['sh', '-c', 'while true; do echo "Worker agent running"; sleep 60; done']
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "64Mi"
+---
+# DaemonSet with wrong node selector (won't match any nodes)
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: missing-nodes-ds
+spec:
+  selector:
+    matchLabels:
+      app: missing-nodes
+  template:
+    metadata:
+      labels:
+        app: missing-nodes
+    spec:
+      nodeSelector:
+        disk: ssd-nvme  # Label that doesn't exist on any node
+      containers:
+      - name: agent
+        image: busybox:1.36
+        command: ['sh', '-c', 'echo "Running"; sleep 3600']

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dns-check
+spec:
+  containers:
+  - name: test
+    image: busybox
+    command: ['sleep', '3600']

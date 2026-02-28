@@ -1,0 +1,27 @@
+apiVersion: example.com/v1
+kind: WebApp
+metadata:
+  name: my-webapp
+spec:
+  replicas: 3
+  image: nginx:alpine
+---
+# CR that violates validation (replicas exceeds max 10)
+# Will be rejected by API server
+# apiVersion: example.com/v1
+# kind: WebApp
+# metadata:
+#   name: invalid-webapp
+# spec:
+#   replicas: 20
+#   image: nginx
+---
+apiVersion: example.com/v1
+kind: WebApp
+metadata:
+  name: webapp-with-finalizer
+  finalizers:
+  - webapp.example.com/cleanup
+spec:
+  replicas: 2
+  image: nginx:alpine

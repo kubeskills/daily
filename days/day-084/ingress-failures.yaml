@@ -1,0 +1,69 @@
+# Missing IngressClass - ignored by controllers
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: broken-no-class
+spec:
+  rules:
+  - host: example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-service
+            port:
+              number: 80
+---
+# Backend service doesn't exist
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: missing-backend
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: example.com
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: nonexistent-service
+            port:
+              number: 80
+---
+# Working Ingress with proper setup
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: working-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - myapp.example.com
+    secretName: myapp-tls
+  rules:
+  - host: myapp.example.com
+    http:
+      paths:
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: api-service
+            port:
+              number: 80
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-service
+            port:
+              number: 80

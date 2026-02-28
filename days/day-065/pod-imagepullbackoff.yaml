@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bad-tag
+spec:
+  containers:
+  - name: app
+    image: nginx:nonexistent-tag-12345
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: wrong-registry
+spec:
+  containers:
+  - name: app
+    image: wrong-registry.example.com/nginx:latest
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: never-pull
+spec:
+  containers:
+  - name: app
+    image: nginx:nonexistent-987654
+    imagePullPolicy: Never

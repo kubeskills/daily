@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ip-exhaustion
+spec:
+  replicas: 50
+  selector:
+    matchLabels:
+      app: exhaust
+  template:
+    metadata:
+      labels:
+        app: exhaust
+    spec:
+      containers:
+      - name: app
+        image: nginx:alpine
+        resources:
+          requests:
+            cpu: "10m"
+            memory: 16Mi

@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: besteffort-pod
+  labels:
+    qos: besteffort
+spec:
+  containers:
+  - name: app
+    image: nginx
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: burstable-pod
+  labels:
+    qos: burstable
+spec:
+  containers:
+  - name: app
+    image: nginx
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "500m"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: guaranteed-pod
+  labels:
+    qos: guaranteed
+spec:
+  containers:
+  - name: app
+    image: nginx
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "128Mi"
+        cpu: "100m"

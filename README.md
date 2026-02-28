@@ -27,20 +27,22 @@ You'll develop muscle memory for daily Kubernetes operations and uncover how dif
 ## 🗂 Repository Structure
 
     daily/
-    ├── day-001/
-    │   ├── README.md        # Context, commands, and output
-    │   └── manifests/       # YAML files
-    ├── day-002/
-    │   ├── README.md
-    │   └── manifests/
-    ├── day-003/
-    │   └── …
-    └── …
+    ├── days/
+    │   ├── day-001/
+    │   │   ├── README.md        # Context, commands, and output
+    │   │   └── manifests/       # YAML files (where applicable)
+    │   ├── day-002/
+    │   │   ├── README.md
+    │   │   └── manifests/
+    │   ├── day-003/
+    │   │   └── README.md
+    │   └── … (day-001 through day-088)
+    └── docs/                    # GitHub Pages site assets
 
 Each directory stands alone — no dependencies between days.
 You can start anywhere, but following in order helps build context.
 
-[Get started today with Day 1](day-001/README.md)
+[Get started today with Day 1](days/day-001/README.md)
 
 
 ---
@@ -58,7 +60,7 @@ Each day includes lightweight YAMLs safe to run in public sandboxes.
     kind create cluster --name k8s-lab
 
     # Apply today's manifests
-    kubectl apply -f day-001/manifests/
+    kubectl apply -f days/day-001/manifests/
 
     # Explore results
     kubectl get all -A
@@ -120,10 +122,10 @@ Or follow along on Twitter/X: @KubeSkills
 
 Want to add your own "day"?
 1. Fork the repo
-2. Create a new folder `dayXX`
+2. Create a new folder `days/day-XXX`
 3. Add:
    - `README.md` (context, commands, lessons)
-   - `manifests/` (YAML or Helm values)
+   - `manifests/` (YAML or Helm values, if applicable)
 4. Open a pull request
 
 Your test idea might become part of the next release of the newsletter.

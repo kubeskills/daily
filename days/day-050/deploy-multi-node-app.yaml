@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-node-app
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: multi-node
+  template:
+    metadata:
+      labels:
+        app: multi-node
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"

@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: parallel-job
+spec:
+  completions: 10
+  parallelism: 3
+  activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 86400
+  template:
+    spec:
+      containers:
+      - name: worker
+        image: busybox
+        command: ['sh', '-c', 'echo "Worker $HOSTNAME"; sleep 5']
+      restartPolicy: OnFailure

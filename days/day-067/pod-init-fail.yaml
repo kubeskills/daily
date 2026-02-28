@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: failing-init
+spec:
+  initContainers:
+  - name: init-fail
+    image: busybox:1.36
+    command: ['sh', '-c', 'echo "Init container failed"; exit 1']
+  containers:
+  - name: app
+    image: nginx:alpine
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-timeout
+spec:
+  initContainers:
+  - name: wait-forever
+    image: busybox:1.36
+    command: ['sh', '-c', 'echo "Waiting for dependency..."; sleep 3600']
+  containers:
+  - name: app
+    image: nginx:alpine

@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: isolate-partition
+spec:
+  podSelector:
+    matchLabels:
+      app: split-test
+      partition: "a"
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          partition: "a"
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          partition: "a"

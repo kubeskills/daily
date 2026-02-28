@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: demo-tls-secret
+type: kubernetes.io/tls
+data:
+  # Base64 encoded cert and key (placeholder - replace with real values)
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0t
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0t
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo-tls
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - secure.example.com
+    secretName: demo-tls-secret
+  rules:
+  - host: secure.example.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-v1
+            port:
+              number: 80

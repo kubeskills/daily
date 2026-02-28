@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: with-resources
+  namespace: quota-test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: with-resources
+  template:
+    metadata:
+      labels:
+        app: with-resources
+    spec:
+      containers:
+      - name: app
+        image: nginx
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi

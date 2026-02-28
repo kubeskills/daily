@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: psa-violation
+  namespace: restricted-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: psa-violation
+  template:
+    metadata:
+      labels:
+        app: psa-violation
+    spec:
+      containers:
+      - name: app
+        image: nginx:alpine
+        securityContext:
+          privileged: true
+          runAsUser: 0
+          allowPrivilegeEscalation: true

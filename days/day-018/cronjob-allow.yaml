@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: slow-job-allow
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Allow
+  successfulJobsHistoryLimit: 5
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: sleeper
+            image: busybox
+            command:
+            - /bin/sh
+            - -c
+            - echo "Job started at $(date)"; sleep 300; echo "Job finished at $(date)"
+          restartPolicy: Never

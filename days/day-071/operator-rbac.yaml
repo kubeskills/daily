@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webapp-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: webapp-operator
+  namespace: webapp-system
+---
+# Broken RBAC - missing verbs and resources to demonstrate operator failure
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: webapp-operator-broken
+rules:
+- apiGroups: ["example.com"]
+  resources: ["webapps"]
+  verbs: ["get", "list", "watch"]
+  # Missing: create, update, patch, delete
+- apiGroups: ["example.com"]
+  resources: ["webapps/status"]
+  verbs: ["get"]
+  # Missing: update, patch
+# Missing: RBAC for deployments, services, events
+---
+# Fixed RBAC - complete permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: webapp-operator
+rules:
+- apiGroups: ["example.com"]
+  resources: ["webapps"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["example.com"]
+  resources: ["webapps/status"]
+  verbs: ["get", "update", "patch"]
+- apiGroups: ["example.com"]
+  resources: ["webapps/finalizers"]
+  verbs: ["update"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["services", "configmaps"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create", "patch"]
+- apiGroups: ["coordination.k8s.io"]
+  resources: ["leases"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: webapp-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: webapp-operator
+subjects:
+- kind: ServiceAccount
+  name: webapp-operator
+  namespace: webapp-system

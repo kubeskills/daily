@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-a
+  template:
+    metadata:
+      labels:
+        app: service-a
+    spec:
+      initContainers:
+      - name: wait-for-b
+        image: busybox
+        command: ['sh', '-c', 'until nslookup service-b; do echo waiting for service-b; sleep 2; done']
+      containers:
+      - name: app
+        image: nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-a
+spec:
+  selector:
+    app: service-a
+  ports:
+  - port: 80

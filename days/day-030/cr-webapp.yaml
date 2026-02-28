@@ -1,0 +1,7 @@
+apiVersion: apps.example.com/v1
+kind: WebApp
+metadata:
+  name: my-webapp
+spec:
+  replicas: 2
+  image: nginx:latest

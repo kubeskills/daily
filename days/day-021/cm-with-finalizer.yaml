@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-cm
+  finalizers:
+  - example.com/finalizer
+data:
+  key: value

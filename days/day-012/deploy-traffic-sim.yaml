@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traffic-sim
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: traffic-sim
+  template:
+    metadata:
+      labels:
+        app: traffic-sim
+    spec:
+      containers:
+      - name: load
+        image: busybox
+        command: ['sh', '-c', 'while true; do wget -q -O- http://cpu-app; sleep 0.1; done']

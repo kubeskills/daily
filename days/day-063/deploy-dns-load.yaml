@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dns-load
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: dns-load
+  template:
+    metadata:
+      labels:
+        app: dns-load
+    spec:
+      containers:
+      - name: load
+        image: busybox:1.36
+        command:
+        - sh
+        - -c
+        - |
+          while true; do
+            nslookup nginx.default.svc.cluster.local
+            nslookup google.com
+            sleep 0.1
+          done
+        resources:
+          requests:
+            cpu: "10m"
+            memory: 16Mi

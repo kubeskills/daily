@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shared-volume
+spec:
+  securityContext:
+    fsGroup: 3000
+  containers:
+  - name: writer
+    image: busybox
+    command: ['sh', '-c']
+    args:
+    - |
+      while true; do
+        echo "$(date) - writing" >> /shared/log.txt
+        sleep 5
+      done
+    securityContext:
+      runAsUser: 1000
+    volumeMounts:
+    - name: shared
+      mountPath: /shared
+  - name: reader
+    image: busybox
+    command: ['sh', '-c']
+    args:
+    - |
+      while true; do
+        echo "=== Latest log ==="
+        tail -5 /shared/log.txt 2>&1 || echo "File not yet created"
+        sleep 10
+      done
+    securityContext:
+      runAsUser: 2000
+    volumeMounts:
+    - name: shared
+      mountPath: /shared
+  volumes:
+  - name: shared
+    emptyDir: {}

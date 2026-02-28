@@ -1,0 +1,37 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: broken-scrape
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+      # Wrong label - won't match any services
+      monitor: "true"
+  endpoints:
+  - port: web
+    interval: 15s
+    path: /metrics
+---
+# Fixed ServiceMonitor with correct labels
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: working-scrape
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  namespaceSelector:
+    any: true
+  selector:
+    matchLabels:
+      app: myapp
+  endpoints:
+  - port: metrics
+    interval: 15s
+    path: /metrics
+    scrapeTimeout: 10s

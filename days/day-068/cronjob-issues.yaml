@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: missed-schedule
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 60
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: worker
+            image: busybox:1.36
+            command: ['sh', '-c', 'echo "CronJob with concurrencyPolicy:Forbid"; sleep 600']
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: history-buildup
+spec:
+  schedule: "*/1 * * * *"
+  successfulJobsHistoryLimit: 100
+  failedJobsHistoryLimit: 100
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: worker
+            image: busybox:1.36
+            command: ['sh', '-c', 'echo "Completed"']

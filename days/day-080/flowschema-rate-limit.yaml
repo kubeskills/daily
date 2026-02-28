@@ -1,0 +1,35 @@
+apiVersion: flowcontrol.apiserver.k8s.io/v1
+kind: PriorityLevelConfiguration
+metadata:
+  name: low-priority-ops
+spec:
+  type: Limited
+  limited:
+    assuredConcurrencyShares: 5
+    limitResponse:
+      type: Queue
+      queuing:
+        queues: 8
+        handSize: 3
+        queueLengthLimit: 20
+---
+apiVersion: flowcontrol.apiserver.k8s.io/v1
+kind: FlowSchema
+metadata:
+  name: batch-ops-throttle
+spec:
+  priorityLevelConfiguration:
+    name: low-priority-ops
+  matchingPrecedence: 500
+  distinguisherMethod:
+    type: ByUser
+  rules:
+  - subjects:
+    - kind: ServiceAccount
+      serviceAccount:
+        name: batch-processor
+        namespace: default
+    resourceRules:
+    - verbs: ["list", "watch"]
+      apiGroups: ["*"]
+      resources: ["*"]

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: protected-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: protected
+  template:
+    metadata:
+      labels:
+        app: protected
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: protected-pdb
+spec:
+  minAvailable: 3
+  selector:
+    matchLabels:
+      app: protected

@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-hog
+  namespace: capacity-test
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: resource-hog
+  template:
+    metadata:
+      labels:
+        app: resource-hog
+        priority: low
+    spec:
+      priorityClassName: low-priority
+      containers:
+      - name: hog
+        image: nginx:alpine
+        resources:
+          requests:
+            cpu: "500m"
+            memory: 512Mi
+          limits:
+            cpu: "1"
+            memory: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: critical-app
+  namespace: capacity-test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: critical-app
+  template:
+    metadata:
+      labels:
+        app: critical-app
+        priority: high
+    spec:
+      priorityClassName: high-priority
+      containers:
+      - name: app
+        image: nginx:alpine
+        resources:
+          requests:
+            cpu: "500m"
+            memory: 512Mi
+          limits:
+            cpu: "1"
+            memory: 1Gi

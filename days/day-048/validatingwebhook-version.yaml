@@ -1,0 +1,16 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: version-test-webhook
+webhooks:
+- name: version.test.com
+  clientConfig:
+    url: https://example.com/validate
+  rules:
+  - apiGroups: ["apps"]
+    apiVersions: ["v1"]
+    operations: ["CREATE"]
+    resources: ["deployments"]
+  admissionReviewVersions: ["v1", "v1beta1"]
+  sideEffects: None
+  failurePolicy: Ignore

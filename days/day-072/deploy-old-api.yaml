@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: modern-deployment
+  annotations:
+    # Upgraded from deprecated extensions/v1beta1 which was removed in K8s 1.16
+    # Upgraded from apps/v1beta1 which was removed in K8s 1.16
+    note: "Use apps/v1 for all Deployments (required since K8s 1.16)"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+      - name: app
+        image: nginx:alpine
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"

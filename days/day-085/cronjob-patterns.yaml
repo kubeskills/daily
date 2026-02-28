@@ -1,0 +1,56 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: minute-cronjob
+spec:
+  schedule: "*/5 * * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: job
+            image: busybox:1.36
+            command: ['sh', '-c', 'date; echo "CronJob executed"']
+          restartPolicy: Never
+---
+# CronJob that misses schedules (long-running + Forbid)
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: slow-cronjob
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 30
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: job
+            image: busybox:1.36
+            command: ['sh', '-c', 'echo "Starting slow job"; sleep 120']
+          restartPolicy: Never
+---
+# CronJob with Replace policy
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: replace-cronjob
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: job
+            image: busybox:1.36
+            command: ['sh', '-c', 'echo "Starting replace job"; sleep 90']
+          restartPolicy: Never

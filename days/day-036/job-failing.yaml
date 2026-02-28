@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: failing-job
+spec:
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+      - name: fail
+        image: busybox
+        command: ['sh', '-c', 'echo "Attempt failed"; exit 1']
+      restartPolicy: Never

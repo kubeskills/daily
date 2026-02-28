@@ -1,0 +1,18 @@
+apiVersion: flowcontrol.apiserver.k8s.io/v1
+kind: FlowSchema
+metadata:
+  name: custom-high-priority
+spec:
+  matchingPrecedence: 100
+  priorityLevelConfiguration:
+    name: workload-high
+  rules:
+  - subjects:
+    - kind: ServiceAccount
+      serviceAccount:
+        name: critical-app
+        namespace: production
+    resourceRules:
+    - verbs: ["*"]
+      apiGroups: ["*"]
+      resources: ["*"]

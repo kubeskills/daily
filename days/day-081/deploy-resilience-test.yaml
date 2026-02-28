@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resilient-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: resilient
+  template:
+    metadata:
+      labels:
+        app: resilient
+    spec:
+      containers:
+      - name: app
+        image: nginx:alpine
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 15
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: resilient
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: resilient-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: resilient

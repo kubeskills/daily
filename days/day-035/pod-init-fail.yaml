@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: init-fail-pod
+spec:
+  initContainers:
+  - name: failing-init
+    image: busybox
+    command: ['sh', '-c', 'echo attempting init; exit 1']
+  containers:
+  - name: app
+    image: nginx

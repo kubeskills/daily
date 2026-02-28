@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-v1
+  labels:
+    version: "1.0"
+    environment: staging
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+        version: "1.0"
+    spec:
+      containers:
+      - name: app
+        image: nginx:1.21
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+---
+# Same app definition for prod - should match staging exactly
+# But in practice prod often has manual edits (config drift)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  labels:
+    environment: staging
+data:
+  database_url: postgres://db:5432/myapp
+  log_level: info
+  feature_flags: "off"
